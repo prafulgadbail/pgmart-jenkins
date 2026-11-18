@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>PGMart · Cloud &amp; DevOps Book Store · DevOps project by Praful Gadbail</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <meta name="description" content="PGMart: an online store for cloud and DevOps books, built and run on AWS. DevOps project by Praful Gadbail." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+  <style>:root {
+  --ink: #0b1220; --muted: #5b6475; --line: #e3e7ef; --surface: #ffffff; --surface-2: #f1f3f8; --bg: #f6f7fb;
+  --brand: #f97316; --brand-2: #fb923c; color-scheme: light;
+  box-sizing: border-box; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --ink: #e8edf6; --muted: #93a0b8; --line: #1f2a40; --surface: #0e1525; --surface-2: #131c30; --bg: #070b14; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --ink: #e8edf6; --muted: #93a0b8; --line: #1f2a40; --surface: #0e1525; --surface-2: #131c30; --bg: #070b14; color-scheme: dark; }
+*, *::before, *::after { box-sizing: inherit; }
+body { margin: 0; background: #0b1220; color: var(--ink); font-family: Inter, 'Segoe UI', system-ui, sans-serif; line-height: 1.5; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 20; background: #0b1220; }
+
+/* hero: exactly one screen on laptops and desktops */
+.hero { position: relative; overflow: hidden; color: #fff; min-height: 100svh; display: flex; flex-direction: column;
+  padding: 0 clamp(18px, 4vw, 56px) clamp(18px, 3vh, 34px); gap: clamp(14px, 2.4vh, 26px);
+  background: radial-gradient(900px 520px at 80% 20%, rgba(249,115,22,.22), transparent 60%),
+              radial-gradient(700px 500px at 10% 90%, rgba(56,189,248,.14), transparent 60%), linear-gradient(160deg, #0b1220, #101b31); }
+.hero::after { content: ""; position: absolute; inset: 0; pointer-events: none; background-size: 44px 44px; mask-image: linear-gradient(to bottom, #000 30%, transparent);
+  background-image: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px); }
+.hero > * { position: relative; z-index: 1; }
+.topnav { display: flex; align-items: center; justify-content: space-between; padding: 16px 0 0; }
+.brand { font-weight: 800; font-size: 20px; text-decoration: none; color: #fff; }
+.brand span, h1 span, .footer span { color: var(--brand); }
+.brand-sub { font: 600 11px 'JetBrains Mono', monospace; letter-spacing: .1em; text-transform: uppercase; color: #9fb0cc; margin-left: 6px; }
+.pill { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; padding: 5px 12px; border-radius: 999px; background: rgba(255,255,255,.08); }
+.pill i { width: 8px; height: 8px; border-radius: 50%; background: #94a3b8; }
+.pill.on i { background: #22c55e; box-shadow: 0 0 0 4px rgba(34,197,94,.25); animation: pulse 1.8s infinite; }
+.pill.off i { background: #f59e0b; }
+@keyframes pulse { 50% { box-shadow: 0 0 0 8px rgba(34,197,94,0); } }
+
+.hero-grid { flex: 1; display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(20px, 4vw, 60px); align-items: center; min-height: 0; }
+.eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--brand-2); margin: 0; }
+h1 { font-size: clamp(52px, min(9vw, 13vh), 112px); line-height: .95; margin: 8px 0 12px; letter-spacing: -.045em; }
+.tagline { font-size: clamp(17px, 2.2vh, 22px); color: #d6deec; margin: 0; max-width: 560px; }
+.owner { color: #9fb0cc; margin: 10px 0 0; }
+.owner b { color: #fff; }
+.cta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: clamp(16px, 3vh, 26px); }
+.btn { text-decoration: none; color: #fff; padding: 10px 16px; border-radius: 10px; font-weight: 600; font-size: 14.5px; border: 1px solid rgba(255,255,255,.18); transition: transform .15s; }
+.btn:hover { transform: translateY(-2px); }
+.btn.primary { background: linear-gradient(135deg, var(--brand), var(--brand-2)); border: 0; box-shadow: 0 10px 30px rgba(249,115,22,.35); }
+.btn.ghost { color: #b9c3d6; }
+
+/* DevOps loop + pipeline */
+.visual { display: flex; flex-direction: column; gap: 14px; align-items: center; min-height: 0; container-type: inline-size; }
+.loop { width: 100%; max-height: 44vh; overflow: visible; }
+.loop .track { fill: none; stroke: rgba(255,255,255,.08); stroke-width: 22; }
+.loop .glow { fill: none; stroke: url(#lg); stroke-width: 3; stroke-dasharray: 10 8; animation: flow 1.4s linear infinite; }
+@keyframes flow { to { stroke-dashoffset: -36; } }
+.loop text { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-anchor: middle; }
+.stage-l text { fill: #7dd3fc; } .stage-r text { fill: #fdba74; }
+.pkt { filter: drop-shadow(0 0 6px currentColor); }
+.pkt.a { fill: #f97316; color: #f97316; } .pkt.b { fill: #a78bfa; color: #a78bfa; } .pkt.c { fill: #38bdf8; color: #38bdf8; }
+.core circle { fill: #0b1220; stroke: url(#lg); stroke-width: 2.5; }
+.core text { fill: #fff; font-size: 13px; font-weight: 800; text-anchor: middle; font-family: Inter, sans-serif; letter-spacing: .04em; }
+.core text.sm { fill: #fb923c; font-size: 11px; }
+.pipe { width: 100%; display: flex; align-items: center; flex-wrap: nowrap; gap: 0; font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(9px, 1.75cqi, 12.5px); }
+.pipe span { flex: 1 1 0; min-width: 0; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: clip;
+  padding: 6px clamp(2px, .6cqi, 9px); border-radius: 8px; border: 1px solid rgba(255,255,255,.12); color: #94a3b8; background: rgba(255,255,255,.03);
+  animation: lit calc(var(--n) * .6s + 1.2s) infinite; animation-delay: calc(var(--i) * .6s); }
+.pipe i { flex: 0 0 clamp(3px, 1.1cqi, 12px); height: 2px; background: rgba(255,255,255,.15); }
+@keyframes lit {
+  0% { color: #94a3b8; border-color: rgba(255,255,255,.12); background: rgba(255,255,255,.03); }
+  4%, 60% { color: #fff; border-color: #22c55e; background: rgba(34,197,94,.16); box-shadow: 0 0 14px rgba(34,197,94,.35); }
+  80%, 100% { color: #94a3b8; border-color: rgba(255,255,255,.12); background: rgba(255,255,255,.03); box-shadow: none; }
+}
+
+/* the three info blocks */
+.blocks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.block { text-align: left; font: inherit; color: #fff; cursor: pointer; display: grid; grid-template-columns: auto 1fr; column-gap: 14px; align-items: center;
+  padding: clamp(12px, 2vh, 18px) 18px; border-radius: 16px; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+  backdrop-filter: blur(6px); transition: transform .2s, border-color .2s, background .2s; }
+.block:hover { transform: translateY(-3px); border-color: var(--brand); background: rgba(249,115,22,.09); }
+.block b { grid-row: span 3; font-size: clamp(30px, 4.6vh, 42px); line-height: 1; background: linear-gradient(135deg, #fff, #fdba74); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.block .l { font-weight: 700; font-size: 16px; }
+.block .s { color: #9fb0cc; font-size: 13px; }
+.block em { font-style: normal; font-size: 12px; color: var(--brand-2); }
+
+/* table popup */
+.viewer { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; padding: 20px; background: rgba(2, 6, 23, .82); backdrop-filter: blur(4px); }
+.viewer[hidden] { display: none; }
+.panel { position: relative; background: var(--surface); color: var(--ink); border-radius: 18px; padding: 26px; width: min(900px, 100%); max-height: 86vh; overflow: auto; box-shadow: 0 30px 80px rgba(0,0,0,.45); }
+.panel h2 { margin: 0 34px 16px 0; font-size: 20px; }
+.close { position: absolute; top: 14px; right: 16px; width: 34px; height: 34px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface-2); color: var(--ink); font-size: 20px; cursor: pointer; }
+.tbl { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+th { background: var(--surface-2); font-size: 13px; }
+td.k { font-family: 'JetBrains Mono', monospace; font-weight: 600; white-space: nowrap; }
+
+.footer { padding: 18px clamp(18px, 4vw, 56px); color: #7f8ea8; font-size: 14px; background: #0b1220; border-top: 1px solid rgba(255,255,255,.06); }
+
+/* short laptop screens (e.g. 1366 x 768): keep the whole hero on one screen */
+@media (min-width: 901px) and (max-height: 820px) {
+  .hero { gap: 12px; }
+  h1 { font-size: clamp(48px, 11vh, 84px); margin: 4px 0 8px; }
+  .tagline { font-size: 17px; }
+  .cta { margin-top: 14px; }
+  .loop { max-height: 38vh; }
+  .block { padding: 10px 16px; }
+  .block b { font-size: 30px; }
+}
+
+/* phones: pipeline wraps into short rows of stages */
+@media (max-width: 560px) {
+  .pipe { flex-wrap: wrap; justify-content: center; gap: 6px; font-size: 11px; }
+  .pipe span { flex: 0 0 auto; padding: 5px 9px; }
+  .pipe i { display: none; }
+}
+
+@media (max-width: 900px) {
+  .hero { min-height: auto; }
+  .hero-grid { grid-template-columns: 1fr; padding-top: 18px; }
+  .loop { max-height: 34vh; }
+  .blocks { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; } .loop animateMotion { display: none; } }
+</style>
+</head>
+<body>
+  <header class="hero">
+    <nav class="topnav">
+      <a class="brand" href="/">PG<span>Mart</span> <small class="brand-sub">Cloud &amp; DevOps Book Store</small></a>
+      <span class="pill" id="live"><i></i><span>Checking…</span></span>
+    </nav>
+
+    <div class="hero-grid">
+      <div class="intro">
+        <p class="eyebrow">DevOps project · AWS · Kubernetes</p>
+        <h1>PG<span>Mart</span></h1>
+        <p class="tagline">A real online store for cloud and DevOps books, built, deployed, monitored and fixed on AWS.</p>
+        <p class="owner">by <b id="owner-name"></b> · <span id="owner-role"></span></p>
+        <div class="cta">
+          <a class="btn primary" href="/shop/">Open the store →</a>
+                    <a class="btn ghost" id="gh-link" target="_blank" rel="noopener">GitHub</a>
+          <a class="btn ghost" id="li-link" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+      </div>
+
+      <div class="visual" aria-hidden="true">
+        <svg viewBox="0 0 520 300" class="loop">
+          <defs>
+            <linearGradient id="lg" x1="0" x2="1"><stop offset="0" stop-color="#38bdf8"/><stop offset=".5" stop-color="#a78bfa"/><stop offset="1" stop-color="#f97316"/></linearGradient>
+            <path id="inf" d="M260,150 C200,40 60,40 60,150 C60,260 200,260 260,150 C320,40 460,40 460,150 C460,260 320,260 260,150 Z"/>
+          </defs>
+          <use href="#inf" class="track"/>
+          <use href="#inf" class="glow"/>
+          <g class="stage-l">
+            <text x="118" y="70">PLAN</text><text x="30" y="155">CODE</text><text x="112" y="245">BUILD</text><text x="196" y="205">TEST</text>
+          </g>
+          <g class="stage-r">
+            <text x="296" y="98">RELEASE</text><text x="376" y="70">DEPLOY</text><text x="472" y="155">OPERATE</text><text x="352" y="245">MONITOR</text>
+          </g>
+          <circle r="7" class="pkt a"><animateMotion dur="6s" repeatCount="indefinite"><mpath href="#inf"/></animateMotion></circle>
+          <circle r="5" class="pkt b"><animateMotion dur="6s" begin="-2s" repeatCount="indefinite"><mpath href="#inf"/></animateMotion></circle>
+          <circle r="5" class="pkt c"><animateMotion dur="6s" begin="-4s" repeatCount="indefinite"><mpath href="#inf"/></animateMotion></circle>
+          <g class="core"><circle cx="260" cy="150" r="30"/><text x="260" y="146">AWS</text><text x="260" y="162" class="sm">EKS</text></g>
+        </svg>
+        <div class="pipe" id="pipe"></div>
+      </div>
+    </div>
+
+  </header>
+
+  <footer class="footer"><b>PG<span>Mart</span></b> · designed, built and operated by <b id="footer-name"></b></footer>
+
+
+  <script>// Content of the DevOps page. The architecture tables come back here once the system runs on AWS.
+window.PGMART = {
+  owner: { name: 'Praful Gadbail', role: 'DevOps Engineer', github: 'https://github.com/prafulgadbail', linkedin: 'https://www.linkedin.com/in/prafulgadbail' },
+  pipeline: ['Git push', 'Build', 'Test', 'SonarQube', 'Docker', 'Trivy', 'ECR', 'Helm', 'EKS'],
+};
+</script>
+  <script>(function () {
+  const d = window.PGMART;
+  const $ = (s) => document.querySelector(s);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  $('#owner-name').textContent = $('#footer-name').textContent = d.owner.name;
+  $('#owner-role').textContent = d.owner.role;
+  $('#gh-link').href = d.owner.github;
+  $('#li-link').href = d.owner.linkedin;
+
+  // pipeline strip: stages light up one after another, like a running build
+  $('#pipe').innerHTML = d.pipeline.map((s, i) => `<span style="--i:${i}">${esc(s)}</span>`).join('<i></i>');
+  $('#pipe').style.setProperty('--n', d.pipeline.length);
+
+
+  // live status: the store's public book API answers when the store is up
+  const live = $('#live');
+  const ctl = new AbortController();
+  setTimeout(() => ctl.abort(), 4000);
+  fetch('/api/topics', { signal: ctl.signal })
+    .then((r) => { if (!r.ok) throw new Error(r.status); live.className = 'pill on'; live.querySelector('span').textContent = 'Store live'; })
+    .catch(() => { live.className = 'pill off'; live.querySelector('span').textContent = 'Store offline'; });
+
+})();
+</script>
+</body>
+</html>
