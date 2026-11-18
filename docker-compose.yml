@@ -1,0 +1,73 @@
+# PGMart on a laptop. Before the first run, copy each .env.example next to it as .env:
+#   for d in local/postgres services/*-service frontend; do cp "$d/.env.example" "$d/.env"; done
+# Then: docker compose up --build
+#   http://localhost:8080   DevOps page and store
+#   http://localhost:8025   Mailpit inbox (sign-up codes, order emails)
+
+name: pgmart
+
+services:
+  # ---------- local stand-ins for RDS and SES ----------
+  postgres:
+    image: postgres:17-alpine
+    env_file: local/postgres/.env
+    volumes:
+      - ./local/postgres/init.sh:/docker-entrypoint-initdb.d/init.sh:ro
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5432:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 5s
+      retries: 20
+
+  mailpit:
+    image: axllent/mailpit:v1.27
+    ports:
+      - "127.0.0.1:8025:8025"
+
+  # ---------- backend ----------
+  user-service:
+    build: services/user-service
+    env_file: services/user-service/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+    restart: unless-stopped
+
+  catalog-service:
+    build: services/catalog-service
+    env_file: services/catalog-service/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  order-service:
+    build: services/order-service
+    env_file: services/order-service/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+      catalog-service:
+        condition: service_started
+    restart: unless-stopped
+
+  # ---------- frontend: nginx serves the pages and sends /api/* to the services ----------
+  frontend:
+    build: frontend
+    env_file: frontend/.env
+    ports:
+      - "8080:8080"
+    depends_on:
+      - user-service
+      - catalog-service
+      - order-service
+    restart: unless-stopped
+
+volumes:
+  pgdata:
