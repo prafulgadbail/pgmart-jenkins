@@ -1,0 +1,54 @@
+# Serves the DevOps page (/) and the store (/shop/), and sends /api/* to the three services.
+# Used by docker compose. ${..._URL} values are filled from environment variables when the container starts.
+
+server {
+    listen 8080;
+    server_name _;
+    root /usr/share/nginx/html;
+
+    add_header X-Content-Type-Options nosniff always;
+    add_header X-Frame-Options DENY always;
+    add_header Referrer-Policy strict-origin-when-cross-origin always;
+
+    # Hashed file names never change, so browsers may keep them for a year
+    location /assets/ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+
+    location = / {
+        try_files /index.html =404;
+        add_header Cache-Control "no-cache";
+    }
+
+    # Store pages are handled by React Router: any /shop/... path gets the store app
+    location /shop/ {
+        try_files $uri /shop/index.html;
+        add_header Cache-Control "no-cache";
+    }
+
+    location = /shop {
+        return 301 /shop/;
+    }
+
+    # ---- API: same paths as the ALB Ingress rules in Kubernetes ----
+    location ~ ^/api/(auth|users)(/|$) {
+        proxy_pass ${USER_SERVICE_URL};
+        include /etc/nginx/conf.d/proxy.inc;
+    }
+
+    location ~ ^/api/(topics|books|wishlist|admin/books)(/|$) {
+        proxy_pass ${CATALOG_SERVICE_URL};
+        include /etc/nginx/conf.d/proxy.inc;
+    }
+
+    location ~ ^/api/(orders|notifications|payments|admin/orders)(/|$) {
+        proxy_pass ${ORDER_SERVICE_URL};
+        include /etc/nginx/conf.d/proxy.inc;
+    }
+
+    # Service-to-service paths are never reachable from the browser
+    location /internal/ {
+        return 404;
+    }
+}
