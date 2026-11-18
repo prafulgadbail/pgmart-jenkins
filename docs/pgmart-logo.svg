@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 84" width="360" height="84" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <title>PGMart</title>
+  <defs>
+    <linearGradient id="pg" x1="0" x2="1">
+      <stop offset="0" stop-color="#38BDF8"/>
+      <stop offset="1" stop-color="#F97316"/>
+    </linearGradient>
+    <style>
+      .n { fill: #232f3e; font-size: 44px; font-weight: 800; }
+      .s { fill: #545b64; font-size: 15px; letter-spacing: .4px; }
+      .dot { fill: #232f3e; }
+      @media (prefers-color-scheme: dark) { .n { fill: #f1f5f9; } .s { fill: #94a3b8; } .dot { fill: #ffffff; } }
+      @media (prefers-reduced-motion: reduce) { .dot { display: none; } }
+    </style>
+  </defs>
+  <path id="loop" d="M48 42c-6-9-12-13.5-19.5-13.5C18.6 28.5 12 34.5 12 42s6.6 13.5 16.5 13.5C36 55.5 42 51 48 42s12-13.5 19.5-13.5C77.4 28.5 84 34.5 84 42s-6.6 13.5-16.5 13.5C60 55.5 54 51 48 42z" fill="none" stroke="url(#pg)" stroke-width="6.5" stroke-linecap="round"/>
+  <!-- the DevOps loop: a dot keeps travelling round the infinity sign -->
+  <circle class="dot" r="4.6">
+    <animateMotion dur="3.2s" repeatCount="indefinite" path="M48 42c-6-9-12-13.5-19.5-13.5C18.6 28.5 12 34.5 12 42s6.6 13.5 16.5 13.5C36 55.5 42 51 48 42s12-13.5 19.5-13.5C77.4 28.5 84 34.5 84 42s-6.6 13.5-16.5 13.5C60 55.5 54 51 48 42z"/>
+  </circle>
+  <text x="100" y="50" class="n">PG<tspan fill="#F97316">Mart</tspan></text>
+  <text x="102" y="72" class="s">Cloud &amp; DevOps Book Store</text>
+</svg>

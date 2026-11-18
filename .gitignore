@@ -1,0 +1,21 @@
+# Local settings and secrets (only the .env.example files are committed)
+.env
+*.pem
+
+# Build output
+target/
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+
+# Editors and OS
+.idea/
+.vscode/
+*.iml
+.DS_Store
+*.log
+
+# My own setup notes and generated values (RDS, Secrets Manager); never pushed
+setup/
+
